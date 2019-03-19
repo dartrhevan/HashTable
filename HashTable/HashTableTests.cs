@@ -79,7 +79,7 @@ namespace HashTable
         {
             int findingKey = 0, flag, findingElement = 0;
             var size = 10000;
-            var rnd = new Random(5);
+            var rnd = new Random(270005);
             flag = rnd.Next(size);
             var ht = new HashTable(size);
             for (var i = 0; i < size; i++)

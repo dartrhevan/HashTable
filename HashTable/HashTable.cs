@@ -8,14 +8,26 @@ namespace HashTable
 {
     class HashTable
     {
-        private Tuple<int, object>[] data;
+        //private Tuple<int, List<object>>[] data;
+        class HashData
+        {
+            public readonly int Hash;
+            public  object Value { get; set; }
+
+            public HashData(int h, object obj)
+            {
+                Hash = h;
+                Value = obj;
+            }
+        }
+        private List<HashData>[] data;
         /// <summary>
         /// Конструктор контейнера
         /// summary>
         /// size">Размер хэш-таблицы
         public HashTable(int size)
         {
-            data = new Tuple<int, object>[size];
+            data = new List<HashData>[size];//new Tuple<int, List<object>>[size];
         }
         ///
         /// Метод складывающий пару ключ-значение в таблицу
@@ -27,8 +39,16 @@ namespace HashTable
         {
             var keyHashCode = key.GetHashCode();
             var index = Math.Abs(keyHashCode) % data.Length;
-            //if(pair.Item1 == keyHashCode)
-            data[index] = Tuple.Create(keyHashCode, value);
+
+            if(data[index] == null)
+                data[index] = new List<HashData> { new HashData(keyHashCode,  value )};//Tuple.Create(keyHashCode, new List<object> { value });
+            else
+            {
+                var el = data[index].FirstOrDefault(x => x.Hash == keyHashCode);
+                if (el != null) el.Value = value;
+                else data[index].Add(new HashData(keyHashCode, value));
+            }
+            //data[index] = Tuple.Create(keyHashCode, new List<object> {value});
         }
         /// <summary>
         /// Поиск значения по ключу
@@ -40,8 +60,9 @@ namespace HashTable
             try
             {
                 var keyHashCode = key.GetHashCode();
-                var pair = data[Math.Abs(keyHashCode) % data.Length];
-                return pair.Item1 == keyHashCode ? pair.Item2 : null;
+                var valueByKey = data[Math.Abs(keyHashCode) % data.Length];
+                return valueByKey.Find(x => x.Hash == keyHashCode).Value;
+                //return pair.Item1 == keyHashCode ? pair.Item2 : null;
             }
             catch
             {
