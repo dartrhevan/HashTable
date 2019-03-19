@@ -19,7 +19,7 @@ namespace HashTable
             var element2 = "el2";
             var element3 = new[] {0, 1, 2, 3};
             var key1 = "int";
-            var key2 = 0;
+            var key2 = 4;
             var key3 = "3";
             var ht = new HashTable(3);
             ht.PutPair(key1, element1);

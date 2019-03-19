@@ -8,15 +8,14 @@ namespace HashTable
 {
     class HashTable
     {
-        private readonly Dictionary<object, object> dict;// = new Dictionary<object, object>();
-        
+        private Tuple<int, object>[] data;
         /// <summary>
         /// Конструктор контейнера
         /// summary>
         /// size">Размер хэш-таблицы
         public HashTable(int size)
         {
-            dict = new Dictionary<object, object>(size);
+            data = new Tuple<int, object>[size];
         }
         ///
         /// Метод складывающий пару ключ-значение в таблицу
@@ -26,18 +25,23 @@ namespace HashTable
 
         public void PutPair(object key, object value)
         {
-            dict[key] = value;
+            var keyHashCode = key.GetHashCode();
+            var index = Math.Abs(keyHashCode) % data.Length;
+            //if(pair.Item1 == keyHashCode)
+            data[index] = Tuple.Create(keyHashCode, value);
         }
         /// <summary>
         /// Поиск значения по ключу
         /// summary>
         /// key">Ключ
-        /// <returns>Значение, null если ключ отсутствуетreturns>
+        /// <returns>Значение, null если ключ отсутствует<returns>
         public object GetValueByKey(object key)
         {
             try
             {
-                return dict[key];
+                var keyHashCode = key.GetHashCode();
+                var pair = data[Math.Abs(keyHashCode) % data.Length];
+                return pair.Item1 == keyHashCode ? pair.Item2 : null;
             }
             catch
             {
