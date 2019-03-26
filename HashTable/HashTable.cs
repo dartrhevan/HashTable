@@ -11,12 +11,12 @@ namespace HashTable
         //private Tuple<int, List<object>>[] data;
         class HashData
         {
-            public readonly int Hash;
+            public readonly int KeyHash;
             public  object Value { get; set; }
 
             public HashData(int h, object obj)
             {
-                Hash = h;
+                KeyHash = h;
                 Value = obj;
             }
         }
@@ -44,7 +44,7 @@ namespace HashTable
                 data[index] = new List<HashData> { new HashData(keyHashCode,  value )};//Tuple.Create(keyHashCode, new List<object> { value });
             else
             {
-                var el = data[index].FirstOrDefault(x => x.Hash == keyHashCode);
+                var el = data[index].FirstOrDefault(x => x.KeyHash == keyHashCode);
                 if (el != null) el.Value = value;
                 else data[index].Add(new HashData(keyHashCode, value));
             }
@@ -61,7 +61,7 @@ namespace HashTable
             {
                 var keyHashCode = key.GetHashCode();
                 var valueByKey = data[Math.Abs(keyHashCode) % data.Length];
-                return valueByKey.Find(x => x.Hash == keyHashCode).Value;
+                return valueByKey.Find(x => x.KeyHash == keyHashCode).Value;
                 //return pair.Item1 == keyHashCode ? pair.Item2 : null;
             }
             catch
